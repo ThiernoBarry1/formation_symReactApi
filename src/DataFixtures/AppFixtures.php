@@ -6,9 +6,13 @@ use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Invoice;
 use App\Entity\Customer;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class AppFixtures extends Fixture
 {   
@@ -54,6 +58,8 @@ class AppFixtures extends Fixture
                 }
             }
             $manager->flush();
+           
         }
     }
+
 }
