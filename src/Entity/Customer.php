@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
@@ -13,6 +14,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
  * @ApiResource(
+ * collectionOperations={"GET","POST"},
+ * itemOperations={"GET","PUT","DELETE"},
  * normalizationContext={
  *  "groups"={"customers_read"}
  * }
@@ -58,6 +61,7 @@ class Customer
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Invoice", mappedBy="customer")
      *  @Groups({"customers_read"})
+     * @ApiSubresource
      */
     private $invoices;
 
@@ -70,8 +74,38 @@ class Customer
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
-    }
+    }   
+    /**
+     * permet de calculer le total des invoices.
+     * @Groups({"customers_read"})
+     *
+     * @return float
+     */
+    public function getMontantTotal():float
+    {
+        return array_reduce($this->invoices->toArray(),function($total,$invoices){
+            return $total + $invoices->getAmount();
+        },0.0);
+    } 
+    /**
+     * permet de calculer le montant du client dû.
+     * 
+     *@Groups({"customers_read"})
 
+     * @return float
+     */
+    public function getAmountNotPaye():float
+    {
+        return array_reduce($this->invoices->toArray(), function($total,$invoices) {
+            
+            if ( $invoices->getStatus() === "SENT"){
+              return $total +  $invoices->getAmount();
+            }
+            return $total;
+            
+            //return $invoices->getStatus() === "PAID" || $invoices->getStatus() === "CANCELLED" ? $total +  0.0:$total + $invoices->getAmount();
+        },0.0);
+    }
     public function getId(): ?int
     {
         return $this->id;
