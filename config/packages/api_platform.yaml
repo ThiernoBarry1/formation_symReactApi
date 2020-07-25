@@ -5,9 +5,8 @@ api_platform:
     patch_formats:
         json: ['application/merge-patch+json']
     swagger:
-        versions: [3]
+        versions: [2,3]
     
-
     collection:
         pagination:
             enabled: false

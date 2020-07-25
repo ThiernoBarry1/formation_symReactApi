@@ -13,11 +13,24 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * configuration pour cette activité. Je surcharge la configuration
  * api_plateform  
+ * 
  * @ORM\Entity(repositoryClass="App\Repository\InvoiceRepository")
  * @ApiResource(
+ * itemOperations={"GET","PUT","DELETE","increment"={
+ *      "method"="POST",
+ *      "path"="/invoices/{id}/increment",
+ *      "controller"=InvoiceIncrementationController::class,
+ *      "swagger_context"={ 
+ *                           "summary":"Incremente une facture", 
+ *                           "description":"Permet d'incremeter un chrono pour une facture donnée"
+ *                         }
+ *        }
+ * }
+ * ,
  * normalizationContext={
  *  "groups"={"invoices_read"}
  * },
+ *
  * subresourceOperations={
  *  "api_customers_invoices_get_subresource"={
  *   "normalization_context"={"groups"="invoices_subresource"} 
