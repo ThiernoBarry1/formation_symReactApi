@@ -9,7 +9,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * configuration pour cette activité. Je surcharge la configuration
  * api_plateform  
@@ -30,7 +30,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * normalizationContext={
  *  "groups"={"invoices_read"}
  * },
- *
+ * denormalizationContext={
+ *  "disable_type_enforcement"= true
+ *},
  * subresourceOperations={
  *  "api_customers_invoices_get_subresource"={
  *   "normalization_context"={"groups"="invoices_subresource"} 
@@ -57,19 +59,22 @@ class Invoice
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     *  @Groups({"invoices_read","customers_read","invoices_subresource"})
+     * @Groups({"invoices_read","customers_read","invoices_subresource"})
+     * @Assert\Type(type="numeric",message="le montant doit être de type numeric ")
      */
     private $amount;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     *  @Groups({"invoices_read","customers_read","invoices_subresource"})
+     * @Groups({"invoices_read","customers_read","invoices_subresource"})
+     * @Assert\DateTime(message="la date doit être au format YYYY-mm-dd")
      */
     private $sentAt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"invoices_read","customers_read","invoices_subresource"})
+     * @Assert\NotBlank()
      */
     private $status;
 
@@ -83,6 +88,7 @@ class Invoice
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"invoices_read","customers_read","invoices_subresource"})
+     * @Assert\Type(type="integer")
      */
     private $chrono;
 
@@ -96,7 +102,7 @@ class Invoice
         return $this->amount;
     }
 
-    public function setAmount(?float $amount): self
+    public function setAmount($amount): self
     {
         $this->amount = $amount;
 
@@ -117,7 +123,7 @@ class Invoice
         return $this->sentAt;
     }
 
-    public function setSentAt(?\DateTimeInterface $sentAt): self
+    public function setSentAt($sentAt): self
     {
         $this->sentAt = $sentAt;
 
