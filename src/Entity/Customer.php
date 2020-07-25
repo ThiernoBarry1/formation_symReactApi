@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +10,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
@@ -35,20 +37,34 @@ class Customer
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     *  @Groups({"customers_read","invoices_read"})
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"customers_read","invoices_read"})
+     * @Assert\NotBlank(message="Le prénom ne doit pas être vide")
+     * @Assert\Length( min = 2,
+     *                 minMessage="Le prénom être supperieur à {{ limit }}",
+     *                 max = 10,
+     *                 maxMessage="Le prénom doit être inferieur à {{ limit }}"
+     *                )
      */
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      *  @Groups({"customers_read","invoices_read"})
+     * @Assert\NotBlank(message="Le prénom ne doit pas être vide")
+     * @Assert\Length( min = 2,
+     *                 minMessage="Le nom être supperieur à {{ limit }}",
+     *                 max = 10,
+     *                 maxMessage="Le nom doit être inferieur à {{ limit }}"
+     *                )
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *  @Groups({"customers_read","invoices_read"})
+     * @Assert\NotBlank(message="Le prénom ne doit pas être vide")
+     * @Assert\Email(message="Vous devez donner une adresse mail valide")
      */
     private $email;
 
@@ -68,6 +84,7 @@ class Customer
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="customers")
      *  @Groups({"customers_read"})
+     * @Assert\NotBlank(message="Un user est obligatoire")
      */
     private $user;
 

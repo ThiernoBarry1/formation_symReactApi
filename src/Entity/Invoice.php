@@ -19,7 +19,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * itemOperations={"GET","PUT","DELETE","increment"={
  *      "method"="POST",
  *      "path"="/invoices/{id}/increment",
- *      "controller"=InvoiceIncrementationController::class,
+ *      "controller"="App\Controller\InvoiceIncrementationController",
  *      "swagger_context"={ 
  *                           "summary":"Incremente une facture", 
  *                           "description":"Permet d'incremeter un chrono pour une facture donnée"
