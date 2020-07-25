@@ -12,7 +12,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Validator\Constraints as Assert;
 /**
  * configuration pour cette activité. Je surcharge la configuration
- * api_plateform  
+ * api_plateform.
+ * normalizer prendre les données de la BD vers cible ( afichage, application) en json, xml,yaml   
+ * denormalizer prendre entrées les données dans la BD
  * 
  * @ORM\Entity(repositoryClass="App\Repository\InvoiceRepository")
  * @ApiResource(
