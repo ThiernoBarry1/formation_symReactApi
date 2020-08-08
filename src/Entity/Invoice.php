@@ -60,14 +60,16 @@ class Invoice
     private $id;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float")
+     * @Assert\NotBlank(message="Le montant de la facture est obligatoire")
      * @Groups({"invoices_read","customers_read","invoices_subresource"})
      * @Assert\Type(type="numeric",message="le montant doit être de type numeric ")
      */
     private $amount;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
+      * @Assert\NotBlank(message="la date d'édition de la facture est oligatoire")
      * @Groups({"invoices_read","customers_read","invoices_subresource"})
      * @Assert\DateTime(message="la date doit être au format YYYY-mm-dd")
      */
@@ -82,13 +84,15 @@ class Invoice
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="invoices")
+     * @Assert\NotBlank(message="il faut l'associé à un client")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"invoices_read"})
      */
     private $customer;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="le chrono est requis")
      * @Groups({"invoices_read","customers_read","invoices_subresource"})
      * @Assert\Type(type="integer")
      */

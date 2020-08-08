@@ -41,7 +41,7 @@ class Customer
      * @Groups({"customers_read","invoices_read"})
      * @Assert\NotBlank(message="Le prénom ne doit pas être vide")
      * @Assert\Length( min = 2,
-     *                 minMessage="Le prénom être supperieur à {{ limit }}",
+     *                 minMessage="Le prénom doit être supperieur à {{ limit }}",
      *                 max = 10,
      *                 maxMessage="Le prénom doit être inferieur à {{ limit }}"
      *                )
