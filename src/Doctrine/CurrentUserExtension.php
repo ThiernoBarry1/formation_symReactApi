@@ -6,6 +6,7 @@ use Symfony\Component\Security\Core\Security;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
+use App\Entity\User;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class CurrentUserExtension  implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
@@ -23,7 +24,8 @@ class CurrentUserExtension  implements QueryCollectionExtensionInterface, QueryI
 
          $user  = $this->security->getUser();
       
-         if(( $resourceClass === "App\Entity\Invoice" || $resourceClass === "App\Entity\Curstomer" ) && (!$this->checker->isGranted("ROLE_ADMIN") )){
+         if(( $resourceClass === "App\Entity\Invoice" || $resourceClass === "App\Entity\Curstomer" ) && (!$this->checker->isGranted("ROLE_ADMIN") 
+               && $user instanceof User)){
             $rootAlias = $queryBuilder->getRootAliases()[0];
             if( $resourceClass === "App\Entity\Invoice"){
                 $queryBuilder->join("$rootAlias.customer","c")
