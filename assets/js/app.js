@@ -12,9 +12,13 @@ import '../css/app.css';
 // import $ from 'jquery';
 //
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 console.log('Hello Webpack Encore!!! Edit me in assets/js/app.js');
 
 const App = () =>{
         return <h1>Bonjour !</h1>
 }
+
+const rootElement = document.querySelector('#app');
+ReactDOM.render(<App></App>,rootElement);
