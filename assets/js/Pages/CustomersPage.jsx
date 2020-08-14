@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 const CustomersPage = (props) => {
     const [ customers,  setCustomers ] = useState([]);
-    
+    const [currentPage, setCurrentPage] = useState(1);
+
     useEffect(()=>{
         Axios.get("http://127.0.0.1:8000/api/customers")
         .then((response)=>response.data['hydra:member'],[])
@@ -14,6 +15,20 @@ const CustomersPage = (props) => {
              setCustomers(customers.filter(customer=>customer.id !== id ))
          });
      }
+     const handlePageChange = (page)=>
+     {
+         setCurrentPage(page);
+     }
+     const itemPerPage = 10;
+     const nbrPages = Math.ceil(customers.length/itemPerPage);
+     const pages = [];
+     for(let i=1;i< nbrPages;i++){
+        pages.push(i);
+     }
+     const start = currentPage * itemPerPage - itemPerPage ;
+     //              3         * 10  - 10 = 20
+     //              4         *  10 - 10 = 30    
+     const paginatedCustomers = customers.slice(start , start+itemPerPage);
     return ( 
         <>
         <h1> liste des clients</h1>
@@ -30,7 +45,7 @@ const CustomersPage = (props) => {
                </tr>
            </thead>
            <tbody>
-         { customers.map((customer)=>(
+         { paginatedCustomers.map((customer)=>(
                <tr key={customer.id}>
                    <td>{customer.id}</td>
                    <td>
@@ -48,6 +63,24 @@ const CustomersPage = (props) => {
           } 
            </tbody>
         </table>
+        <div>
+            <ul className="pagination pagination-sm">
+                <li className={"page-item  "+(currentPage === 1 && " disabled")}>
+                     <button className="page-link" onClick={()=>handlePageChange(currentPage-1)}>&laquo;</button>
+                </li>
+                
+                { pages.map((page) => 
+                     <li className={"page-item "+(currentPage === page && "active")} key={page} onClick={()=>handlePageChange(page)}>
+                      <button className="page-link">
+                        {page}
+                      </button>
+                    </li>
+                )}
+                <li className={"page-item  "+(currentPage === nbrPages && "disabled")}>
+                   <button className="page-link" onClick= {()=>handlePageChange(currentPage+1)}>&raquo;</button>
+                </li>
+            </ul>
+        </div>
         </>
      );
 }
