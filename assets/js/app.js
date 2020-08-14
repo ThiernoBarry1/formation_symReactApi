@@ -18,6 +18,7 @@ import HomePage from './Pages/HomePage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { HashRouter, Switch, Route }  from "react-router-dom";
 import CustomersPage from './Pages/CustomersPage';
+import CustomersPageWithPagination from './Pages/CustomersPageWithPagination';
 
 
 
@@ -32,6 +33,7 @@ const App = () =>{
                    <NavBar/> 
                    <main className="container pt-5">
                        <Switch>
+                           <Route path="/customers/WithPagination" component={ CustomersPageWithPagination }/>
                            <Route path="/customers" component={ CustomersPage }/>
                            <Route path="/" component={ HomePage }/>
                        </Switch>        
