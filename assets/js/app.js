@@ -13,11 +13,31 @@ import '../css/app.css';
 //
 import React from 'react';
 import ReactDOM from 'react-dom';
+import NavBar from './Components/NavBar';
+import HomePage from './Pages/HomePage';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { HashRouter, Switch, Route }  from "react-router-dom";
+import CustomersPage from './Pages/CustomersPage';
 
-console.log('Hello Webpack Encore!!! Edit me in assets/js/app.js');
+
 
 const App = () =>{
-        return <h1>Bonjour !</h1>
+        return ( 
+                // le HashRouter pour ajouter un # à la route et differencier avec symfony 
+                // localhost:8000/#/customers
+                // localhost:8000/#/invoices
+                // localhost:8000/app avec symfony par exemple
+
+                 <HashRouter>
+                   <NavBar/> 
+                   <main className="container pt-5">
+                       <Switch>
+                           <Route path="/customers" component={ CustomersPage }/>
+                           <Route path="/" component={ HomePage }/>
+                       </Switch>        
+                   </main>
+                 </HashRouter>
+        );
 }
 
 const rootElement = document.querySelector('#app');
