@@ -42,7 +42,7 @@ const CustomersPage = (props) => {
          const value = currentTarget.value;
          setSearch(value);
      }
-     const itemPerPage = 10;
+     const itemPerPage = 5;
      const filteredCustomers = customers.filter(c=>
          c.firstName.toLowerCase().includes(search.toLowerCase()) || 
          c.lastName.toLowerCase().includes(search.toLowerCase()) ||

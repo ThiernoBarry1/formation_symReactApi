@@ -3,11 +3,16 @@ import axios from "axios";
 import Pagination from '../Components/Pagination';
 import DataApi from '../Services/DataApi';
 import moment from 'moment';
+const STATUS = {
+    PAID: "Payée",
+    CANCELLED: "Annulée",
+    SENT: "Envoyée"
+}
 const InvoicesPages = (propos) => {
     const  [invoices, setInvoices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItems, setTotalItems] = useState(1);
-    const itemPerPage = 5;
+    const itemPerPage = 20;
     const fetchInvoices = async ( )=>
     {
         try {
@@ -39,19 +44,19 @@ const InvoicesPages = (propos) => {
                    return "";
            }
      }
-     const descriptionStatus = (status)=>{
-        switch (status) {
-            case "PAID":
-                 return "payée";
-            case "SENT":
-                 return "envoyée";
-            case "CANCELLED":
-                 return "annulée";
-            default:
-                return "";
-        }
+     
+     const handlePageChange = (page)=>
+     {
+         setCurrentPage(page);
      }
-     Pagination.getData(filteredCustomers,currentPage,itemPerPage)
+     const handleDelete = async  id=>{
+         try {
+            await CustomersApi.deleteElement(id);
+         } catch (error) {
+            setInvoices(invoices.filter(invoice=>invoice.id !== id ))
+         }
+     }
+     const paginatedInvoices = Pagination.getData(invoices,currentPage,itemPerPage)
     return ( 
             <>
                 <h1> La liste des factures </h1>
@@ -67,16 +72,16 @@ const InvoicesPages = (propos) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {invoices.map((invoice) =>
+                        {paginatedInvoices.map((invoice) =>
                             <tr  key={invoice.id}>
                                 <td >{invoice.chrono}</td>
                                 <td>{invoice.customer.firstName} {invoice.customer.lastName}</td>
                                 <td >{invoice.amount.toLocaleString()} ‎€</td>
                                 <td >
-                                    <span className={"badge badge-"+colorStatut(invoice.status)}>{descriptionStatus(invoice.status)}</span></td>
+                                    <span className={"badge badge-"+colorStatut(invoice.status)}>{STATUS[invoice.status]}</span></td>
                                 <td >{format(invoice.sentAt) }</td>
                                 <td> 
-                                    <button className="btn btn-sm btn-danger mr-3">supprimer</button>
+                                    <button className="btn btn-sm btn-danger mr-3" onClick={ ()=>handleDelete(invoice.id)}>supprimer</button>
                         
                                     <button className="btn btn-sm btn-info">éditer</button>
                                 </td>
@@ -85,7 +90,8 @@ const InvoicesPages = (propos) => {
                         }
                     </tbody>
                 </table>
-                {<Pagination currentPage={currentPage}  length={filteredCustomers.length} itemPerPage ={itemPerPage} 
+                { 
+                    <Pagination currentPage={currentPage}  length={invoices.length} itemPerPage ={itemPerPage} 
                   handlePageChange={handlePageChange}/> }
             </>
         );
