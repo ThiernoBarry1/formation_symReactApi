@@ -2,8 +2,8 @@ import React from 'react';
 const Pagination = (propos) => {
     const   {currentPage,length,itemPerPage,handlePageChange} = propos;
     const nbrPages = Math.ceil(length/itemPerPage);
-     const pages = [];
-     for(let i=1;i< nbrPages;i++){
+    const pages = [];
+     for(let i=1;i<= nbrPages;i++){
         pages.push(i);
      }
     return ( 

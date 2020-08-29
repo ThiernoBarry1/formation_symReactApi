@@ -1,31 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import Axios from 'axios';
-import  Pagination from '../Components/Pagination';
+import Pagination from '../Components/Pagination';
+import CustomersApi from '../Services/DataApi';
+
 const CustomersPage = (props) => {
     const [ customers,  setCustomers ] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-
+    const [search, setSearch] = useState("");
+    /** fetch all customers  from API  */
+    const fetchCustomers = async ( )=>
+    {
+        try {
+            const data  =  await CustomersApi.findAll("customers")
+            setCustomers(data);
+        } catch (error) {
+            console.log(error.response);
+        }
+    }
     useEffect(()=>{
-        Axios.get("http://127.0.0.1:8000/api/customers")
-        .then((response)=>response.data['hydra:member'],[])
+       /* CustomersApi.findAll()
         .then(data => setCustomers(data))
         .catch(error => console.log(error.response))
+        */
+        fetchCustomers();
     });
-    const handleDelete = id=>{
-         Axios.delete("http://127.0.0.1:8000/api/customers/"+id).then((response)=> {
+    const handleDelete = async  id=>{
+        /*CustomersApi.deleteCustomers(id)
+         .then((response)=> {
              setCustomers(customers.filter(customer=>customer.id !== id ))
-         });
+         });*/
+         try {
+            await CustomersApi.deleteElement(id);
+         } catch (error) {
+            setCustomers(customers.filter(customer=>customer.id !== id ))
+         }
      }
      const handlePageChange = (page)=>
      {
          setCurrentPage(page);
      }
+     const handleSearch = ( {currentTarget}) =>{
+         const value = currentTarget.value;
+         setSearch(value);
+     }
      const itemPerPage = 10;
-    
-     const paginatedCustomers = Pagination.getData(customers,currentPage,itemPerPage);
+     const filteredCustomers = customers.filter(c=>
+         c.firstName.toLowerCase().includes(search.toLowerCase()) || 
+         c.lastName.toLowerCase().includes(search.toLowerCase()) ||
+         c.email.toLowerCase().includes(search.toLowerCase()) ||
+         c.compagny !== null && c.compagny.toLowerCase().includes(search.toLowerCase())
+         )
+     const paginatedCustomers = filteredCustomers.length > itemPerPage ? Pagination.getData(filteredCustomers,currentPage,itemPerPage) :filteredCustomers;
     return ( 
         <>
         <h1> liste des clients</h1>
+        <div className="form-group">   
+          <input type="text" className="form-control" onChange={handleSearch} value={search} 
+                  placeholder="rechercher ..."/>
+        </div>
         <table className="table table-hover">
            <thead>
                <tr>
@@ -57,8 +88,8 @@ const CustomersPage = (props) => {
           } 
            </tbody>
         </table>
-        <Pagination currentPage={currentPage}  length={customers.length} itemPerPage ={itemPerPage} 
-                  handlePageChange={handlePageChange}/>
+        {itemPerPage <= filteredCustomers.length && <Pagination currentPage={currentPage}  length={filteredCustomers.length} itemPerPage ={itemPerPage} 
+                  handlePageChange={handlePageChange}/> }
         
         </>
      );

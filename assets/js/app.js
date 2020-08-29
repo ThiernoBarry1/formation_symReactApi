@@ -15,9 +15,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import NavBar from './Components/NavBar';
 import HomePage from './Pages/HomePage';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootswatch/dist/litera/bootstrap.min.css"; 
 import { HashRouter, Switch, Route }  from "react-router-dom";
 import CustomersPage from './Pages/CustomersPage';
+import InvoicesPage from "./Pages/InvoicesPage";
 import CustomersPageWithPagination from './Pages/CustomersPageWithPagination';
 
 
@@ -33,7 +34,8 @@ const App = () =>{
                    <NavBar/> 
                    <main className="container pt-5">
                        <Switch>
-                           <Route path="/customers/WithPagination" component={ CustomersPageWithPagination }/>
+                           {/*<Route path="/customers/WithPagination" component={ CustomersPageWithPagination }/>*/}
+                           <Route path="/invoices" component={ InvoicesPage }/>
                            <Route path="/customers" component={ CustomersPage }/>
                            <Route path="/" component={ HomePage }/>
                        </Switch>        
